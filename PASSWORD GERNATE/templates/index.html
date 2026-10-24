@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator | Secure Your World</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="glow glow-one"></div>
+    <div class="glow glow-two"></div>
+
+    <header class="navbar">
+        <a class="brand" href="/">
+            <span class="brand-icon">🔐</span>
+            <span>Password <span class="gradient-text">Generator</span>
+                <small>Strong passwords. Safer you.</small>
+            </span>
+        </a>
+        <div class="tech">Built with 🐍 Python & Flask</div>
+    </header>
+
+    <main class="layout">
+        <section class="generator glass">
+            <div class="heading">
+                <div class="shield">🛡️</div>
+                <div>
+                    <h1>Create Your <span class="gradient-text">Password</span></h1>
+                    <p>Generate a strong, random password in seconds.</p>
+                </div>
+            </div>
+
+            <form method="POST">
+                <label class="section-label" for="length">
+                    <span>📏</span> Password Length
+                    <span class="muted">(4–64)</span>
+                </label>
+                <input class="length-input" type="number" id="length"
+                       name="length" min="4" max="64" value="12" required>
+
+                <h3 class="section-label">⚙️ Include Characters</h3>
+
+                <div class="options">
+                    <label class="option blue">
+                        <input type="checkbox" name="uppercase" checked>
+                        <span>Capital letters <small>A–Z</small></span>
+                        <b>Aa</b>
+                    </label>
+
+                    <label class="option purple">
+                        <input type="checkbox" name="lowercase" checked>
+                        <span>Small letters <small>a–z</small></span>
+                        <b>ab</b>
+                    </label>
+
+                    <label class="option green">
+                        <input type="checkbox" name="numbers" checked>
+                        <span>Numbers <small>0–9</small></span>
+                        <b>123</b>
+                    </label>
+
+                    <label class="option pink">
+                        <input type="checkbox" name="symbols" checked>
+                        <span>Special characters <small>!@#$%&amp;*?</small></span>
+                        <b>✦</b>
+                    </label>
+                </div>
+
+                <button class="generate" type="submit">
+                    ✨ Generate Password <span>→</span>
+                </button>
+            </form>
+
+            {% if password %}
+            <section class="result">
+                <h3>🔒 Your Password</h3>
+                <div class="password-row">
+                    <input id="password" value="{{ password }}" readonly
+                           aria-label="Generated password">
+                    <button class="copy" type="button" onclick="copyPassword()">
+                        📋 Copy
+                    </button>
+                </div>
+                <p id="message" class="message" aria-live="polite"></p>
+
+                <div class="strength-heading">
+                    <span>🛡️ Password length</span>
+                    <strong>{{ password|length }} characters</strong>
+                </div>
+                <div class="strength-track">
+                    <div class="strength-fill"></div>
+                </div>
+            </section>
+            {% endif %}
+        </section>
+
+        <aside class="sidebar">
+            <div class="robot">🤖<span>🔒</span></div>
+
+            <section class="info-card glass">
+                <h2>💡 Why use a strong password?</h2>
+                <p>✅ Protect your personal data</p>
+                <p>✅ Make guessing harder</p>
+                <p>✅ Keep your accounts safer</p>
+                <p>✅ Enjoy greater peace of mind</p>
+            </section>
+
+            <section class="tip-card">
+                <h2>⭐ Pro Tip</h2>
+                <p>Use a mix of letters, numbers and symbols. Never reuse an important password.</p>
+            </section>
+        </aside>
+    </main>
+
+    <footer>Made with <span>♥</span> using Python &amp; Flask</footer>
+
+    <script>
+        function copyPassword() {
+            const field = document.getElementById("password");
+            const message = document.getElementById("message");
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(field.value)
+                    .then(() => message.textContent = "✓ Password copied!")
+                    .catch(() => fallbackCopy(field, message));
+            } else {
+                fallbackCopy(field, message);
+            }
+        }
+
+        function fallbackCopy(field, message) {
+            field.select();
+            field.setSelectionRange(0, 999);
+            const copied = document.execCommand("copy");
+            message.textContent = copied
+                ? "✓ Password copied!"
+                : "Select the password and copy it manually.";
+        }
+    </script>
+</body>
+</html>
